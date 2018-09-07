@@ -26,8 +26,24 @@ public class DemoInfo implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	private String name, description, value;
+	private String description, value;
 
 	private long id;
+
+	private String username;
+
+	private String password;
+
+	private String usertype;
+
+	private Integer enabled;
+
+	private String realname;
+
+	private String qq;
+
+	private String email;
+
+	private String tel;
 
 }
