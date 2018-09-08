@@ -20,10 +20,6 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-<<<<<<< HEAD
-import org.apache.ibatis.jdbc.SQL;
-=======
->>>>>>> 715dafb39b663598ae7329d6118c7dca9893668b
 
 import com.hkitemplate.demo.beans.DemoInfo;
 
@@ -42,11 +38,7 @@ import com.hkitemplate.demo.beans.DemoInfo;
 @Mapper
 public interface UserInfoMapper {
 
-<<<<<<< HEAD
-	@Select("SELECT * FROM demo_info WHERE name = #{name}")
-=======
 	@Select("SELECT * FROM demo_info WHERE username = #{name}")
->>>>>>> 715dafb39b663598ae7329d6118c7dca9893668b
 	List<DemoInfo> findByName(@Param("name") String name);
 
 	@Select("SELECT * FROM demo_info WHERE id = #{id}")
