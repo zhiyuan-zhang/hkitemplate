@@ -36,7 +36,7 @@ import com.hkitemplate.demo.beans.DemoInfo;
  *         2018年9月7日 下午2:17:20
  */
 @Mapper
-public interface UserInfoMapper {
+public interface DemoInfoMapper {
 
 	@Select("SELECT * FROM demo_info WHERE username = #{name}")
 	List<DemoInfo> findByName(@Param("name") String name);
@@ -45,7 +45,7 @@ public interface UserInfoMapper {
 	List<DemoInfo> findById(@Param("id") int id);
 
 	@Insert("INSERT INTO demo_info(Id, username, password, usertype, enabled, realname, email, qq, tel, description, value) VALUES(#{Id}, #{username}, #{password}, #{usertype}, #{enabled}, #{realname}, #{email}, #{qq}, #{tel}, ${description}, #{value}")
-	int insert(DemoInfo di);
+	int insert(DemoInfo id);
 
 	// 两个语句实现效果一致
 	// @Insert("INSERT INTO
