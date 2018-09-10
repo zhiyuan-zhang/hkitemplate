@@ -10,19 +10,22 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.fastjson.JSON;
 import com.hkitemplate.demo.beans.DemoInfo;
-import com.hkitemplate.demo.dao.UserInfoMapper;
+import com.hkitemplate.demo.dao.DemoInfoMapper;
+import com.hkitemplate.demo.servers.DemoInfoServer;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class HkitemplateApplicationTests {
 
 	@Autowired
-	UserInfoMapper userinfomapper;
+	DemoInfoMapper userinfomapper;
 	
+	@Autowired
+	DemoInfoServer infoserver;
 	@Test
 	public void contextLoads() {
 		System.out.println("123123");
-		List<DemoInfo> findById = userinfomapper.findById(1);
+		List<DemoInfo> findById = infoserver.findById(1);
 		System.out.println("\n\n\n\n\n");
 		System.out.println("输出结果：" + JSON.toJSONString(findById.get(0)));
 		System.out.println("输出结果：" + JSON.toJSONString(findById));

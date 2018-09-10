@@ -11,6 +11,7 @@ package com.hkitemplate.demo.beans;
 
 import java.io.Serializable;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -22,6 +23,7 @@ import lombok.Data;
  * 2018年9月5日 上午10:33:10
  */
 @Data
+@AllArgsConstructor
 public class DemoInfo implements Serializable{
 
 	private static final long serialVersionUID = 1L;

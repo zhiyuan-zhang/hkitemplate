@@ -11,6 +11,8 @@ package com.hkitemplate.demo.beans;
 
 import java.io.Serializable;
 
+import lombok.Data;
+
 /**
  * @author zhanghaow
  *<p>Title: ResultBean</p> 
@@ -19,6 +21,7 @@ import java.io.Serializable;
  *
  * 2018年9月5日 上午11:08:31
  */
+@Data
 public class ResultBean<T> implements Serializable {
 
 	private static final long serialVersionUID = 1L;

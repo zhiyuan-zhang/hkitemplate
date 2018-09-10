@@ -1,4 +1,4 @@
-package com.hkitemplate.demo;
+package com;
 
 import java.util.Arrays;
 
