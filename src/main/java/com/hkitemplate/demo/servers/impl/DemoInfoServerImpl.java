@@ -78,7 +78,7 @@ public class DemoInfoServerImpl implements DemoInfoServer {
 		int insert = demoInfoMapper.insert(id);
 		// 修改操作需要打印操作结果
 		logger.info("insert   success, id:{}", insert);
-		return insert==0 ? true : false;
+		return insert == 1 ? true : false;
 	}
 
 	/*
@@ -94,7 +94,7 @@ public class DemoInfoServerImpl implements DemoInfoServer {
 		int insertByMap = demoInfoMapper.insertByMap(map);
 		// 修改操作需要打印操作结果
 		logger.info("insertByMap   success, id:{}", insertByMap);
-		return insertByMap== 0 ? true : false;
+		return insertByMap== 1 ? true : false;
 	}
 
 	/*

@@ -44,7 +44,8 @@ public interface DemoInfoMapper {
 	@Select("SELECT * FROM demo_info WHERE id = #{id}")
 	List<DemoInfo> findById(@Param("id") int id);
 
-	@Insert("INSERT INTO demo_info(Id, username, password, usertype, enabled, realname, email, qq, tel, description, value) VALUES(#{Id}, #{username}, #{password}, #{usertype}, #{enabled}, #{realname}, #{email}, #{qq}, #{tel}, ${description}, #{value}")
+
+	@Insert("INSERT INTO `demo_info` (`id`, `description`, `value`, `username`, `password`, `userptype`, `enabled`, `qq`, `email`, `tel`) VALUES (#{id}, '123', '123', 'admin', 'admin', 'admin', '1', '9122', '9122', '1121')")
 	int insert(DemoInfo id);
 
 	// 两个语句实现效果一致
@@ -55,7 +56,7 @@ public interface DemoInfoMapper {
 	// #{usertype,jdbcType=VARCHAR},#{enabled,jdbcType=INTEGER},
 	// #{realname,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},
 	// #{tel,jdbcType=VARCHAR})")
-	@Insert("INSERT INTO demo_info(Id,username,password,usertype,enabled,realname,email,tel) VALUES(#{id}, #{username},#{password}, #{usertype},#{enabled}, #{realname},#{email}, #{tel})")
+	@Insert("INSERT INTO `demo_info` (`id`, `description`, `value`, `username`, `password`, `userptype`, `enabled`, `qq`, `email`, `tel`) VALUES (#{id}, '123', '123', 'admin', 'admin', 'admin', '1', '9122', '9122', '1121')")
 	int insertByMap(Map<String, Object> map);
 
 	@Select("SELECT * FROM demo_info WHERE 1=1 ")
