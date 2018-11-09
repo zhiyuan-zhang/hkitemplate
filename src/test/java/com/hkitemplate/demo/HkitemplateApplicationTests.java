@@ -26,10 +26,12 @@ public class HkitemplateApplicationTests {
 	public void contextLoads() {
 		System.out.println("123123");
 		List<DemoInfo> findById = infoserver.findAll();
-		System.out.println("\n\n\n\n\n");
+		System.out.println("\n\n");
 		System.out.println("输出结果：" + JSON.toJSONString(findById.get(0)));
 		System.out.println("输出结果：" + JSON.toJSONString(findById));
-		System.out.println("\n\n\n\n\n");
+		System.out.println("\n\n");
 	}
-
+	public void fixdata() {
+		
+	}
 }

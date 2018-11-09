@@ -41,7 +41,7 @@ import com.hkitemplate.demo.beans.ResultBean;
  *
  *<p>Description: </p> 
  *
- * 2018年9月12日 下午12:01:56
+ * 2018年3月12日 下午12:01:56
  */
 @Aspect
 @Component
@@ -59,12 +59,12 @@ public class ControllerAOP {
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        // 记录下请求内容
-        logger.info("URL : " + request.getRequestURL().toString());
-        logger.info("HTTP_METHOD : " + request.getMethod());
-        logger.info("IP : " + request.getRemoteAddr());
-        logger.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-        logger.info("ARGS : " + Arrays.toString(joinPoint.getArgs()));
+        // 记录请求内容
+        logger.info("对象请求的URL : " + request.getRequestURL().toString());
+        logger.info("请求方法名称 : " + request.getMethod());
+        logger.info("对方IP地址 : " + request.getRemoteAddr());
+        logger.info("运行的java类 : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+        logger.info("请求参数 : " + Arrays.toString(joinPoint.getArgs()));
  
     }
  
@@ -90,11 +90,11 @@ public class ControllerAOP {
     public void after(JoinPoint jp){
     	logger.info("方法最后执行.....");
     }
- 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
     //环绕通知,环绕增强，相当于MethodInterceptor
     @Around("webLog()")
     public Object arround(ProceedingJoinPoint pjp) {
-    	logger.info("方法环绕start.....");
+    	logger.info("@Around:进入服务器端开始记录日志 .....");
        
         long startTime = System.currentTimeMillis();
 
@@ -102,7 +102,7 @@ public class ControllerAOP {
 
         try {
             result = (ResultBean<?>) pjp.proceed();
-            logger.info("方法环绕proceed，结果是 :" + pjp.getSignature() + "use time:" + (System.currentTimeMillis() - startTime));
+            logger.info("@Around:结果是 :" + pjp.getSignature() + " use time: " + (System.currentTimeMillis() - startTime));
         } catch (Throwable e) {
             result = handlerException(pjp, e);
         }

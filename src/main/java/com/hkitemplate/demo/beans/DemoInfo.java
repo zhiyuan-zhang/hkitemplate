@@ -23,6 +23,14 @@ import lombok.Data;
  * 2018年9月5日 上午10:33:10
  */
 
+/**
+ * @author zhanghaow
+ *<p>Title: DemoInfo</p> 
+ *
+ *<p>Description: </p> 
+ *
+ * 2018年9月28日 上午11:00:50
+ */
 public class DemoInfo implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -47,6 +55,42 @@ public class DemoInfo implements Serializable{
 	private String email;
 
 	private String tel;
+
+	/**
+	 * 
+	 */
+	public DemoInfo() {
+		super();
+	}
+
+	/**
+	 * @param description
+	 * @param value
+	 * @param id
+	 * @param username
+	 * @param password
+	 * @param usertype
+	 * @param enabled
+	 * @param realname
+	 * @param qq
+	 * @param email
+	 * @param tel
+	 */
+	public DemoInfo(String description, String value, long id, String username, String password, String usertype,
+			Integer enabled, String realname, String qq, String email, String tel) {
+		super();
+		this.description = description;
+		this.value = value;
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.usertype = usertype;
+		this.enabled = enabled;
+		this.realname = realname;
+		this.qq = qq;
+		this.email = email;
+		this.tel = tel;
+	}
 
 	/**
 	 * @return the description

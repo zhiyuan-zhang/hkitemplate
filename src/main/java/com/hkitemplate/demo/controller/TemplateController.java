@@ -43,7 +43,8 @@ import com.hkitemplate.demo.servers.DemoInfoServer;
 @RequestMapping("/template")
 public class TemplateController {
 
-	@Resource
+//	@Resource
+	@Autowired
 	private DemoInfoServer infoserver;
 
 // -------------------------rest 风格的api------------------------------------
@@ -66,7 +67,9 @@ public class TemplateController {
 		// return new ResultBean<Boolean> (infoserver.insert(new DemoInfo(description,
 		// description, 0, name, description, description, null, description,
 		// description, description, description)));
-		return null;
+		DemoInfo demoInfo = new DemoInfo(id,name,0, description, description, description, null, description, description, description, description);
+		
+		return new ResultBean<Boolean>(infoserver.insert(demoInfo));
 	}
 
 	@RequestMapping(value = "/demo/{id}", method = RequestMethod.GET)
@@ -85,8 +88,8 @@ public class TemplateController {
 	}
 
 	@RequestMapping(value = { "/demos", "/" }, method = RequestMethod.GET)
-	private ResultBean<String> findeAll() {
-		return new ResultBean<String>("");
+	private ResultBean<List<DemoInfo>> findeAll() {
+		return new ResultBean<List<DemoInfo>>(infoserver.findAll());
 	}
 
 // -------------------------url 风格的api------------------------------------
@@ -95,11 +98,9 @@ public class TemplateController {
 
 		return new ResultBean<Boolean>(infoserver.insert(demo));
 	}
-
-	@GetMapping("/urldemo-all")
+	@GetMapping(value = "/urldemo-all")
 	public ResultBean<List<DemoInfo>> allDemo() {
 		return new ResultBean<List<DemoInfo>>(infoserver.findAll());
-
 	}
 
 	@PostMapping("/urldemo-delete")
