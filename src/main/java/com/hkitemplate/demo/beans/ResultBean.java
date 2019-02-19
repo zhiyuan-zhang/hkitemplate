@@ -35,7 +35,8 @@ public class ResultBean<T> implements Serializable {
 	public static final int NO_LOGIN = -1;
 	
 	public static final int UNKNOWN_EXCEPTION = -99;
-	
+	//
+	public static final int TOKEN_ERROR = 3;
 
 	/**
 	 * 返回的信息(主要出错的时候使用)

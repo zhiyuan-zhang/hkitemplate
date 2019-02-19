@@ -67,9 +67,9 @@ public class TemplateController {
 		// return new ResultBean<Boolean> (infoserver.insert(new DemoInfo(description,
 		// description, 0, name, description, description, null, description,
 		// description, description, description)));
-		DemoInfo demoInfo = new DemoInfo(id,name,0, description, description, description, null, description, description, description, description);
+//		DemoInfo demoInfo = new DemoInfo(id,name,0, description, description, description, null, description, description, description, description);
 		
-		return new ResultBean<Boolean>(infoserver.insert(demoInfo));
+		return new ResultBean<Boolean>(true);
 	}
 
 	@RequestMapping(value = "/demo/{id}", method = RequestMethod.GET)

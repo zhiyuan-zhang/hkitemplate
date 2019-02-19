@@ -7,7 +7,7 @@
 	<groupId>com.hkitemplate</groupId>
 	<artifactId>hkitemplate</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+
 
 	<name>hkitemplate</name>
 	<description>hkitemplate</description>
@@ -86,6 +86,17 @@
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.2.47</version>
+		</dependency>
+		<!-- jwt加密start -->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
 		</dependency>
 		<!-- swagger2 start -->
 		<dependency>

@@ -21,5 +21,6 @@ public class HkitemplateApplication {
 		for (String beanName : beanNames) {
 			//System.out.println(beanName);
 		}
+
 	}
 }

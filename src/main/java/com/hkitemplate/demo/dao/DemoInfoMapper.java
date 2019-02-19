@@ -45,7 +45,7 @@ public interface DemoInfoMapper {
 	List<DemoInfo> findById(@Param("id") int id);
 
 
-	@Insert("INSERT INTO `demo_info` (`id`, `description`, `value`, `username`, `password`, `userptype`, `enabled`, `qq`, `email`, `tel`) VALUES (#{id}, '123', '123', 'admin', 'admin', 'admin', '1', '9122', '9122', '1121')")
+	@Insert("INSERT INTO `demo_info` (`id`, `username`, `tel`) VALUES (#{id}, #{username}, #{tel})")
 	int insert(DemoInfo id);
 
 	// 两个语句实现效果一致
