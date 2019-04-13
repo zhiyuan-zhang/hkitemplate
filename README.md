@@ -20,7 +20,7 @@ spring boot template
 
 8. 增加调用第三方rest工具类
 
-9. 增加token生成工具 已经 md5数据加密工具
+9. 增加token生成工具 以及 md5数据加密工具
 
 10. 添加Druid连接池
 
