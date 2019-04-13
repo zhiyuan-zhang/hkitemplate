@@ -98,17 +98,6 @@
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 		</dependency>
-		<!-- swagger2 start -->
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.7.0</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.7.0</version>
-		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
@@ -116,27 +105,7 @@
 			<artifactId>lombok</artifactId>
 			<version>1.16.10</version>
 		</dependency>
-		<!-- 添加Spring-Data-JPA的依赖 <dependency> <groupId>org.springframework.boot</groupId> 
-			<artifactId>spring-boot-starter-data-jpa</artifactId> </dependency> -->
 
-		<!-- MyBatis -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>1.3.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.tomcat</groupId>
-					<artifactId>tomcat-jdbc</artifactId>
-				</exclusion>
-				<!-- <exclusion> <groupId>org.springframework</groupId> <artifactId>spring-jdbc</artifactId> 
-					</exclusion> -->
-			</exclusions>
-		</dependency>
 		<!-- druid -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
@@ -188,6 +157,58 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+
+		<!--mybatis模块-->
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-boot-starter</artifactId>
+			<version>3.0.7.1</version>
+		</dependency>
+
+		<!--mybatis code生成模块-->
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-generator</artifactId>
+			<version>3.0.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-engine-core</artifactId>
+			<version>2.0</version>
+		</dependency>
+
+		<!--sql记录模块-->
+		<dependency>
+			<groupId>p6spy</groupId>
+			<artifactId>p6spy</artifactId>
+			<version>3.8.1</version>
+		</dependency>
+		<!-- swagger start -->
+		<dependency>
+			<groupId>com.battcn</groupId>
+			<artifactId>swagger-spring-boot-starter</artifactId>
+			<version>2.1.5-RELEASE</version>
+			<!---->
+			<exclusions>
+				<exclusion>
+					<groupId>com.battcn</groupId>
+					<artifactId>swagger-vue-ui</artifactId>
+				</exclusion>
+			</exclusions>
+
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.8.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

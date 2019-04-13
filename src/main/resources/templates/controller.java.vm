@@ -1,0 +1,123 @@
+package ${package.Controller};
+
+
+#if(${restControllerStyle})
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+#else
+import org.springframework.stereotype.Controller;
+#end
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+
+import com.hkitemplate.demo.beans.ResultBean;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import io.swagger.annotations.ApiParam;
+
+import ${package.Service}.${table.serviceName};
+import ${package.Entity}.${entity};
+
+/**
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${restControllerStyle})
+@RestController
+#else
+@Controller
+#end
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#if(${superControllerClass})
+public class ${table.controllerName} extends ${superControllerClass} {
+#else
+public class ${table.controllerName} {
+#end
+
+    @Autowired
+    public ${table.serviceName} i${entity}Service;
+
+    /**
+     *
+     * 添加${entity}
+     * @author ${author}
+     * @since ${date}
+     * @return
+     */
+    @RequestMapping(value = { "/${table.entityPath}" }, method = RequestMethod.POST)
+    public ResultBean<Boolean> add${entity}(${entity} ${table.entityPath}) {
+        return new ResultBean<Boolean>(i${entity}Service.save(${table.entityPath}));
+    }
+
+    /**
+     *
+     * 功能描述: 根据ID查找${entity}
+     *
+     * @param: id
+     * @return:
+     * @author ${author}
+     * @since ${date}
+     */
+    @RequestMapping(value = "/${table.entityPath}/{id}", method = RequestMethod.GET)
+    public ResultBean<${entity}> find${entity}(@PathVariable("id") int id) {
+        return new ResultBean<${entity}>(i${entity}Service.getById(id));
+    }
+
+    /**
+     *
+     * 功能描述: 更新${entity}
+     *
+     * @param: ${entity}
+     * @return:
+     * @author ${author}
+     * @since ${date}
+     */
+    @RequestMapping(value = "/${table.entityPath}", method = RequestMethod.PUT)
+    public ResultBean<Boolean> update${entity}(@RequestBody ${entity} ${table.entityPath}) {
+        return new ResultBean<Boolean>(i${entity}Service.updateById(${table.entityPath}));
+    }
+
+    /**
+     *
+     * 功能描述: 删除${entity}
+     * @param:
+     * @return:
+     * @author ${author}
+     * @since ${date}
+     */
+    @RequestMapping(value = "/${table.entityPath}/{id}", method = RequestMethod.DELETE)
+    public ResultBean<Boolean> delete${entity}(@ApiParam(required = true,name = "id",value = "id")
+                                                @PathVariable("id") int id) {
+        return new ResultBean<Boolean>(i${entity}Service.removeById(id));
+    }
+
+    /**
+     *
+     * 功能描述: 分页查询所有
+     *
+     * @param: 总条数 getTotal 当前页数 getCurrent 每页显示数 getSize
+     * @return:
+     * @author ${author}
+     * @since ${date}
+     */
+    @RequestMapping(value = { "/${table.entityPath}s", "/" }, method = RequestMethod.GET)
+    public ResultBean<IPage<${entity}>> findeAll(@ApiParam(required = true,name = "id",value = "当前用户id")
+                                                    @RequestParam("id")Integer id,
+                                                    @ApiParam(required = true,name = "current",value = "当前页")
+                                                    @RequestParam("current")Integer current,
+                                                    @ApiParam(required = true,name = "size",value = "每页条数")
+                                                    @RequestParam("size")Integer size)  {
+        Page<${entity}> page = new Page<>(current, size);
+        IPage<${entity}> ${table.entityPath}IPage = i${entity}Service.page(page, new QueryWrapper<${entity}>()
+        .lambda()
+        .eq(${entity}::getId, id));
+        return new ResultBean<IPage<${entity}>>(${table.entityPath}IPage);
+    }
+
+}

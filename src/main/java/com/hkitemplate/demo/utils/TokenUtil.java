@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class TokenUtil {
 
-    private static final String SECRET = "zhxt";
+    private static final String SECRET = "template";
 
     /**
      * 密码加密

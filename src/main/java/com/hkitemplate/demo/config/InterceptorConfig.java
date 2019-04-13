@@ -9,6 +9,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
@@ -19,45 +20,33 @@ import java.util.List;
  */
 @Configuration
 @Log4j
-public class InterceptorConfig extends WebMvcConfigurationSupport {
+public class InterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(tokenInterceptor()).excludePathPatterns("/swagger**/**", "/webjars**/**", "/userinfo/user/login", "/userinfo/root", "/userinfo/message").addPathPatterns("/**");
+        registry.addInterceptor(tokenInterceptor()).excludePathPatterns("static/**","/error", "/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**").addPathPatterns("/**");
     }
 
+    /**
+     * 解决 swagger-ui.html 访问路径 404 问题
+     *
+     * @author Levin
+     */
     @Override
-    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        log.info("========================== 静态资源加载 =========================================");
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:/static/");
+
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
+
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        super.addResourceHandlers(registry);
     }
-
     @Bean
     public ParamInterceptor tokenInterceptor() {
         return new ParamInterceptor();
     }
-
-
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-
-        log.info("configureMessageConverters");
-
-        converters.add(fastJsonHttpMessageConverter());
-        super.configureMessageConverters(converters);
-    }
-
-    @Bean
-    public FastJsonHttpMessageConverter fastJsonHttpMessageConverter() {
-
-        log.info("fastJsonHttpMessageConverter");
-
-        return new FastJsonHttpMessageConverter();
-    }
-
 
 }
