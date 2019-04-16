@@ -2,7 +2,7 @@
 spring boot template
 一个spring boot 集成框架
 
-当前demo主要做了一下几件小事
+当前demo主要做了以下几件小事
 
 1. 通过ResultBean统一格式返回给前端 
 
