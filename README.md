@@ -30,6 +30,8 @@ spring boot template
 
 13. 添加lombok
 
+14. maven -P 自动打包
+
 
 
 
