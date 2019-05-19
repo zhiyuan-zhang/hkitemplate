@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hkitemplate.demo.mvc.user.mapper.UserMapper">
+    <select id="findProfessor" resultType="com.hkitemplate.demo.mvc.user.User">
 
+        SELECT
+        *
+        FROM
+        professor a
+        WHERE
+        NOT EXISTS (
+        SELECT
+        *
+        FROM
+        sys_attend b
+        WHERE
+        a.id = b.professor_id
+        AND b. `type` = #{memberCategory}
+        AND b.table_id = #{tableId}
+        )
+        AND a.polling_status = #{polling}
+        AND a.status = #{status}
+        AND (a.Member_category = #{memberCategory}
+        OR
+        a.Member_category = 3 )
+        <if test="levels !=null and levels.size()>0">
+            and (organization_category in
+            <foreach collection="levels" open="(" close=")" separator="," index="index" item="item">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+            or
+            organization_categoryvice in
+            <foreach collection="levels" open="(" close=")" separator="," index="index" item="item">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+            )
+        </if>
+    </select>
 </mapper>

@@ -32,6 +32,8 @@ spring boot template
 
 14. maven -P 自动打包
 
+15. 添加MP 复杂业务下xml 包括 多表关联,list循环,分页
+
 
 
 
