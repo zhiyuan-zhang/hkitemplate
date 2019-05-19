@@ -15,6 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class HkitemplateApplication {
 
 	public static void main(String[] args) {
+		// TODO: maven 自动配置 切换环境 启动前需要install ide需做相关配置
 		SpringApplication.run(HkitemplateApplication.class, args);
 	}
 	private static final String PATH = "/**";

@@ -5,10 +5,12 @@ import javax.annotation.Resource;
 import com.hkitemplate.demo.mvc.user.IUserService;
 import com.hkitemplate.demo.mvc.user.User;
 import com.hkitemplate.demo.mvc.user.mapper.UserMapper;
+import lombok.extern.log4j.Log4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -27,6 +29,9 @@ import java.util.List;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles("dev")
+@Log4j
+//@TestPropertySource("classpath:application-dev.properties")
 public class SampleTest {
 
     @Resource

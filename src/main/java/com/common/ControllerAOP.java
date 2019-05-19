@@ -65,7 +65,7 @@ public class ControllerAOP {
         logger.info("对方IP地址 : " + request.getRemoteAddr());
         logger.info("运行的java类 : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
         logger.info("请求参数 : " + Arrays.toString(joinPoint.getArgs()));
- 
+
     }
  
     @AfterReturning(returning = "ret", pointcut = "webLog()")
@@ -95,7 +95,7 @@ public class ControllerAOP {
     @Around("webLog()")
     public Object arround(ProceedingJoinPoint pjp) {
     	logger.info("@Around:进入服务器端开始记录日志 .....");
-       
+
         long startTime = System.currentTimeMillis();
 
         ResultBean<?> result;

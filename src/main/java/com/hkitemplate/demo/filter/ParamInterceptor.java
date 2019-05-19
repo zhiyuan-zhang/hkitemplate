@@ -26,7 +26,7 @@ public class ParamInterceptor implements HandlerInterceptor {
         log.info("url is : " + request.toString());
         String userId = vtoken(request.getHeader("X-Token"));
         if (userId == null) {
-            throw new TokenErrorException();
+            throw new TokenErrorException("token ERROR");
         }
         request.setAttribute("tel", userId);
         return true;

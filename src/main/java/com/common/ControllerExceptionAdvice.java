@@ -16,7 +16,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 
 /**
- * 代替AOP Exception
+ * 增强 AOP Exception
  */
 @Log4j
 @ControllerAdvice
@@ -43,31 +43,30 @@ public class ControllerExceptionAdvice {
         } else if (e instanceof NoHandlerFoundException) {
             result.setMsg("404：" + request.toString() + "地址不存在");
         } else {
+            log.error("------------------发现未知异常, 请查看！！！--------------------");
             result.setCode(ResultBean.CHECK_FAIL);
             result.setMsg(e.getMessage());
+            log.error(" error ", e);
         }
-        log.error("------------------发现异常请查看！！！--------------------");
-        //未知异常 ， 打印堆栈
-        log.error(" error ", e);
-
         return result;
     }
 
-    @ExceptionHandler(NoPermissionException.class)
-    @ResponseBody
-    public ResultBean processCheckException(NativeWebRequest request, NoPermissionException e) {
-        return result(e);
-    }
-
-    public ResultBean result(Exception e) {
-        ResultBean result = new ResultBean();
-
-        result.setCode(ResultBean.CHECK_FAIL);
-        result.setMsg(e.getMessage());
-        log.error("------------------发现异常请查看！！！--------------------");
-        log.error(" error ");
-
-        return result;
-    }
+//    // 特殊异常 需要特殊的处理时 使用的方法
+//    @ExceptionHandler(NoPermissionException.class)
+//    @ResponseBody
+//    public ResultBean processCheckException(NativeWebRequest request, NoPermissionException e) {
+//        return result(e);
+//    }
+//
+//    public ResultBean result(Exception e) {
+//        ResultBean result = new ResultBean();
+//
+//        result.setCode(ResultBean.CHECK_FAIL);
+//        result.setMsg(e.getMessage());
+//        log.error("------------------发现异常请查看！！！--------------------");
+//        log.error(" error ");
+//
+//        return result;
+//    }
 
 }
