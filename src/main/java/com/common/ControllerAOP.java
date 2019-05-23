@@ -13,6 +13,8 @@ import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 
+
+import com.alibaba.fastjson.JSONObject;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -58,20 +60,30 @@ public class ControllerAOP {
     public void deBefore(JoinPoint joinPoint) throws Throwable {
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-        // 记录请求内容
-        logger.info("对象请求的URL : " + request.getRequestURL().toString());
-        logger.info("请求方法名称 : " + request.getMethod());
-        logger.info("对方IP地址 : " + request.getRemoteAddr());
-        logger.info("运行的java类 : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-        logger.info("请求参数 : " + Arrays.toString(joinPoint.getArgs()));
+        if (attributes != null && joinPoint != null) {
+            HttpServletRequest request = attributes.getRequest();
+            // 记录请求内容
+            logger.info( "1. 对象请求的URL : " + request.getRequestURL().toString());
+            logger.info( "2. 请求方法名称 : " + request.getMethod());
+            logger.info( "3. 对方IP地址 : " + request.getRemoteAddr());
+            logger.info( "4. 运行的java类 : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+            try{
+                logger.info( request.hashCode()+"5. 请求参数 : " + JSONObject.toJSONString(joinPoint.getArgs() ));
+            }catch (Exception e){
+                logger.info("请求参数切点无法切入");
+            }
+
+        }else{
+            throw new CheckException("网络请求出错, 请清空缓存重新尝试. ");
+        }
 
     }
  
     @AfterReturning(returning = "ret", pointcut = "webLog()")
     public void doAfterReturning(Object ret) throws Throwable {
-        // 处理完请求，返回内容
-    	logger.info("方法的返回值 : " + ret);
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+                .getRequestAttributes()).getRequest();
+        logger.info(request.hashCode()+": 方法的返回值 : " + ret);
     }
  
     //后置异常通知

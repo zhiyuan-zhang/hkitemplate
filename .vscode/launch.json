@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - HkitemplateApplication",
+            "request": "launch",
+            "mainClass": "com.HkitemplateApplication",
+            "projectName": "hkitemplate"
+        }
+    ]
+}

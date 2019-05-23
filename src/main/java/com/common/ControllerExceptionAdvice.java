@@ -1,9 +1,9 @@
 package com.common;
 
-
 import com.common.exceptions.NoPermissionException;
 import com.common.exceptions.TokenErrorException;
 import com.hkitemplate.demo.beans.ResultBean;
+
 import lombok.extern.log4j.Log4j;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;

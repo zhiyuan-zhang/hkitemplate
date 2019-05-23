@@ -4,6 +4,8 @@ spring boot template
 
 当前demo主要做了以下几件小事
 
+
+
 1. 通过ResultBean统一格式返回给前端 
 
 2. AOP捕获进入controller之后的异常 ControllerExceptionAdvice 捕获其他异常
@@ -26,11 +28,11 @@ spring boot template
 
 11. 添加测试Controller 测试类 在test目录下
 
-12. 添加logback日志启动
+12. 统一日志处理 logback
 
 13. 添加lombok
 
-14. maven -P 自动打包
+14. maven多环节构建
 
 15. 添加MP 复杂业务下xml 包括 多表关联,list循环,分页
 
