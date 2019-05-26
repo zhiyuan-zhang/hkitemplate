@@ -36,7 +36,7 @@ spring boot template
 
 15. 添加MP 复杂业务下xml 包括 多表关联,list循环,分页
 
-
+16. 添加枚举和变量例子
 
 
 
