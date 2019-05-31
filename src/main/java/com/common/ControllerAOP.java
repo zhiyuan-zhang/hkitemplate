@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -48,8 +49,9 @@ import com.hkitemplate.demo.beans.ResultBean;
 @Aspect
 @Component
 @Order(-99)
+@Slf4j
 public class ControllerAOP {
-	private static final Logger logger = LoggerFactory.getLogger(ControllerAOP.class);
+//	private static final Logger logger = LoggerFactory.getLogger(ControllerAOP.class);
 	
 	
 	//@Pointcut("execution(* com.hkitemplate.demo.controller.*.*(..))")
@@ -63,14 +65,14 @@ public class ControllerAOP {
         if (attributes != null && joinPoint != null) {
             HttpServletRequest request = attributes.getRequest();
             // 记录请求内容
-            logger.info( "1. 对象请求的URL : " + request.getRequestURL().toString());
-            logger.info( "2. 请求方法名称 : " + request.getMethod());
-            logger.info( "3. 对方IP地址 : " + request.getRemoteAddr());
-            logger.info( "4. 运行的java类 : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+            log.info( "1. 对象请求的URL : {}", request.getRequestURL().toString());
+            log.info( "2. 请求方法名称 : {}" , request.getMethod());
+            log.info( "3. 对方IP地址 : {}" , request.getRemoteAddr());
+            log.info( "4. 运行的java类 : {}" , joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
             try{
-                logger.info( request.hashCode()+"5. 请求参数 : " + JSONObject.toJSONString(joinPoint.getArgs() ));
+                log.info( "5.{} 请求参数 :{} ",request.hashCode(), JSONObject.toJSONString(joinPoint.getArgs() ));
             }catch (Exception e){
-                logger.info("请求参数切点无法切入");
+                log.info("请求参数切点无法切入");
             }
 
         }else{
@@ -83,13 +85,13 @@ public class ControllerAOP {
     public void doAfterReturning(Object ret) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes()).getRequest();
-        logger.info(request.hashCode()+": 方法的返回值 : " + ret);
+        log.info("{} : 方法的返回值 : {}", request.hashCode(),  ret);
     }
  
     //后置异常通知
     @AfterThrowing("webLog()")
     public void throwss(JoinPoint jp){
-    	logger.info("方法异常时执行.....");
+        log.info("方法异常时执行.....");
     }
   //后置异常通知
     @AfterThrowing(throwing = "ex", pointcut = "webLog()")
@@ -100,13 +102,13 @@ public class ControllerAOP {
     //后置最终通知,final增强，不管是抛出异常或者正常退出都会执行
     @After("webLog()")
     public void after(JoinPoint jp){
-    	logger.info("方法最后执行.....");
+        log.info("方法最后执行.....");
     }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
     //环绕通知,环绕增强，相当于MethodInterceptor
     @Around("webLog()")
     public Object arround(ProceedingJoinPoint pjp) {
-    	logger.info("@Around:进入服务器端开始记录日志 .....");
+        log.info("@Around:进入服务器端开始记录日志 .....");
 
         long startTime = System.currentTimeMillis();
 
@@ -114,7 +116,7 @@ public class ControllerAOP {
 
         try {
             result = (ResultBean<?>) pjp.proceed();
-            logger.info("@Around:结果是 :" + pjp.getSignature() + " use time: " + (System.currentTimeMillis() - startTime));
+            log.info("@Around:结果是 :{} use time: {}", pjp.getSignature(),  (System.currentTimeMillis() - startTime ));
         } catch (Throwable e) {
             result = handlerException(pjp, e);
         }
@@ -142,7 +144,7 @@ public class ControllerAOP {
 			result.setMsg("NO PERMISSION");
 			result.setCode(ResultBean.NO_PERMISSION);
 		} else {
-			logger.error(pjp.getSignature() + " error ", e);
+            log.error(" error {}", e);
 
 			// TODO 未知的异常，应该格外注意，可以发送邮件通知等
 			result.setMsg(e.toString());

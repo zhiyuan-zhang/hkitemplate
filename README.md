@@ -38,6 +38,8 @@ spring boot template
 
 16. 添加枚举和变量例子
 
+17. 使用slf4j打印日志
+
 
 
 
