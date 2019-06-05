@@ -27,6 +27,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -64,13 +65,14 @@ public class ControllerAOP {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes != null && joinPoint != null) {
             HttpServletRequest request = attributes.getRequest();
+            MDC.put("THREAD_ID", ""+request.hashCode());
             // 记录请求内容
             log.info( "1. 对象请求的URL : {}", request.getRequestURL().toString());
             log.info( "2. 请求方法名称 : {}" , request.getMethod());
             log.info( "3. 对方IP地址 : {}" , request.getRemoteAddr());
             log.info( "4. 运行的java类 : {}" , joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
             try{
-                log.info( "5.{} 请求参数 :{} ",request.hashCode(), JSONObject.toJSONString(joinPoint.getArgs() ));
+                log.info( "5. 请求参数 :{} ", JSONObject.toJSONString(joinPoint.getArgs() ));
             }catch (Exception e){
                 log.info("请求参数切点无法切入");
             }

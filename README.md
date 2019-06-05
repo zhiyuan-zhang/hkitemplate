@@ -40,7 +40,7 @@ spring boot template
 
 17. 使用slf4j打印日志
 
-
+18. 在AOP中添加slf4j的MDC便于日志的链路追踪
 
 
 
