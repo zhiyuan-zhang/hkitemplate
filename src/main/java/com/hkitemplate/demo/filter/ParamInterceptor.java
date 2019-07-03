@@ -1,9 +1,15 @@
 package com.hkitemplate.demo.filter;
 
 
+import com.common.exceptions.CheckException;
 import com.common.exceptions.TokenErrorException;
+import com.hkitemplate.demo.config.AccessLimit;
+import com.hkitemplate.demo.utils.RedisUtil;
 import com.hkitemplate.demo.utils.TokenUtil;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,20 +22,72 @@ import javax.servlet.http.HttpServletResponse;
  * @auther: ZHANG.HAO
  * @date: 2018/11/27 11:32 AM
  */
-@Log4j
+@Slf4j
 public class ParamInterceptor implements HandlerInterceptor {
+
+
+    @Autowired
+    RedisUtil redisUtil;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        //request.getHeader(String) 从请求头中获取数据
-        //从请求头中获取用户token（登陆凭证根据业务而定）
-        log.info("url is : " + request.toString());
-        String userId = vtoken(request.getHeader("X-Token"));
-        if (userId == null) {
-            throw new TokenErrorException("token ERROR");
+        if (handler instanceof HandlerMethod) {
+            boolean verifyToken = true;
+            int max = 5;
+            int time = 3;
+            //组装key
+            StringBuffer requestURL = request.getRequestURL();
+            String queryString = request.getQueryString();
+            String remoteAddr = request.getRemoteAddr();
+            String userId = vtoken(request.getHeader("X-Token"));
+            String key = requestURL+queryString+remoteAddr+userId;
+
+            log.error("key {}",key.hashCode());
+
+            HandlerMethod hm = (HandlerMethod) handler;
+
+            AccessLimit methodAnnotation = hm.getMethodAnnotation(AccessLimit.class);
+
+            //查看是否有注解标识
+            if (!ObjectUtils.isEmpty(methodAnnotation)) {
+                //如果有注解 获取注解内容
+                max = methodAnnotation.max();
+                time = methodAnnotation.time();
+                verifyToken = methodAnnotation.verifyToken();
+            }
+
+            //验证redis
+            if(redisUtil.hasKey(key)){
+                Integer count = (Integer) redisUtil.get(key);
+                if (count < max) {
+                    log.error("不是第一次 key: {},count {}", key , count);
+                    redisUtil.set(key, redisUtil.incr(key, 1));
+                } else {
+                    log.error("count: {}", count);
+                    throw new CheckException("请求频繁!");
+                }
+            }else{
+                log.error("第一次 key: {},time {}", key , time);
+                redisUtil.set(key, 1, time);
+            }
+
+            //验证token
+            if (verifyToken) {
+                log.error("url is : " + request.toString());
+
+                if (ObjectUtils.isEmpty(userId)) {
+                    throw new TokenErrorException();
+                }
+                request.setAttribute("key", userId);
+            }
+
+            return true;
+
+
         }
-        request.setAttribute("tel", userId);
         return true;
+
+
     }
 
     /**

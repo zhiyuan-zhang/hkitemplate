@@ -72,6 +72,27 @@ public class ResultBean<T> implements Serializable {
 		this.msg = e.toString();
 		this.code = UNKNOWN_EXCEPTION;
 	}
-	
+
+
+	/**
+	 * TODO 06/24 待确定
+	 */
+	private static volatile  ResultBean s=null;
+
+	public static  ResultBean getInstance()
+	{
+		if(s==null)
+		{
+			synchronized(ResultBean.class)
+			{
+				if(s==null)
+				{
+					s=new ResultBean();
+				}
+				return s;
+			}
+		}
+		return s;
+	}
 	
 }

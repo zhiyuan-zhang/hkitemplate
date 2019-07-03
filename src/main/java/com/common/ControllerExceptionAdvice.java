@@ -5,6 +5,7 @@ import com.common.exceptions.TokenErrorException;
 import com.hkitemplate.demo.beans.ResultBean;
 
 import lombok.extern.log4j.Log4j;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,6 +15,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 
 /**
  * 增强 AOP Exception
@@ -21,6 +24,10 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @Log4j
 @ControllerAdvice
 public class ControllerExceptionAdvice {
+
+
+    ResultBean result =  ResultBean.getInstance();
+
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
@@ -51,22 +58,21 @@ public class ControllerExceptionAdvice {
         return result;
     }
 
-//    // 特殊异常 需要特殊的处理时 使用的方法
-//    @ExceptionHandler(NoPermissionException.class)
-//    @ResponseBody
-//    public ResultBean processCheckException(NativeWebRequest request, NoPermissionException e) {
-//        return result(e);
-//    }
-//
-//    public ResultBean result(Exception e) {
-//        ResultBean result = new ResultBean();
-//
-//        result.setCode(ResultBean.CHECK_FAIL);
-//        result.setMsg(e.getMessage());
-//        log.error("------------------发现异常请查看！！！--------------------");
-//        log.error(" error ");
-//
-//        return result;
-//    }
+    /**
+     * 特殊异常 需要特殊的处理时 使用的方法
+     */
+    @ExceptionHandler({SQLIntegrityConstraintViolationException.class , HttpRequestMethodNotSupportedException.class, MissingPathVariableException.class, MissingServletRequestParameterException.class, StringIndexOutOfBoundsException.class})
+    @ResponseBody
+    public ResultBean processCheckException(NativeWebRequest request, Exception e) {
+        return result(e);
+    }
 
+    public ResultBean result(Exception e) {
+
+        result.setCode(ResultBean.CHECK_FAIL);
+        result.setMsg("提供的数据服务器无法解析,请检查.");
+        log.error("------------------非代码异常, 无需关心！！！--------------------");
+        log.error(e.getMessage());
+        return result;
+    }
 }

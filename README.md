@@ -38,7 +38,7 @@ spring boot template
 
 16. 添加枚举和变量例子
 
-17. 使用slf4j打印日志
+17. 使用lombok slf4j打印日志
 
 18. 在AOP中添加slf4j的MDC便于日志的链路追踪
 
