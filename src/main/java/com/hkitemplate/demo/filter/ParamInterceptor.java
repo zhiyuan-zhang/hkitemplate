@@ -34,15 +34,16 @@ public class ParamInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             boolean verifyToken = true;
             int max = 5;
-            int time = 3;
+            int time = 30;
             //组装key
             StringBuffer requestURL = request.getRequestURL();
             String queryString = request.getQueryString();
             String remoteAddr = request.getRemoteAddr();
-            String userId = vtoken(request.getHeader("X-Token"));
-            String key = requestURL+queryString+remoteAddr+userId;
+            String headerToken = request.getHeader("X-Token");
+            String userId = vtoken(headerToken);
+            String key = requestURL + queryString + remoteAddr + userId;
 
-            log.error("key {}",key.hashCode());
+//            log.error("key {}",key.hashCode());
 
             HandlerMethod hm = (HandlerMethod) handler;
 
@@ -57,28 +58,59 @@ public class ParamInterceptor implements HandlerInterceptor {
             }
 
             //验证redis
-            if(redisUtil.hasKey(key)){
-                Integer count = (Integer) redisUtil.get(key);
+            if (redisUtil.hasKey(key)) {
+                double count = redisUtil.hincr("AccessLimit", key, 1);
                 if (count < max) {
-                    log.error("不是第一次 key: {},count {}", key , count);
-                    redisUtil.set(key, redisUtil.incr(key, 1));
+                    log.error("已经存在 key: {},count {}", key, count);
+//                    redisUtil.hincr("AccessLimit", key, 1);
+
                 } else {
+//                    redisUtil.hdel("AccessLimit",key);
                     log.error("count: {}", count);
                     throw new CheckException("请求频繁!");
                 }
-            }else{
-                log.error("第一次 key: {},time {}", key , time);
-                redisUtil.set(key, 1, time);
+
+
+            } else {
+
+                synchronized (this) {
+                    if (redisUtil.hasKey(key)) {
+                        double count = redisUtil.hincr("AccessLimit", key, 1);
+                        if (count < max) {
+                            log.error("synchronized 已经存在 key: {},count {}", key, count);
+//                            redisUtil.hincr("AccessLimit", key, 1);
+
+                        } else {
+//                            redisUtil.hdel("AccessLimit",key);
+                            log.error("synchronized count: {}", count);
+                            throw new CheckException("请求频繁!");
+                        }
+
+
+                    } else {
+                        log.error("第一次 key: {},time {}", key , time);
+                        redisUtil.set(key, "AccessLimit", time);
+                        redisUtil.hdel("AccessLimit",key);
+//                        redisUtil.hincr("AccessLimit",key, 1);
+
+                    }
+
+                }
             }
 
             //验证token
             if (verifyToken) {
-                log.error("url is : " + request.toString());
+//                log.error("url is : " + request.toString());
 
                 if (ObjectUtils.isEmpty(userId)) {
                     throw new TokenErrorException();
                 }
+                String vtoken = (String)redisUtil.get(userId);
+                if(!headerToken.equals(vtoken)){
+                    throw new TokenErrorException("token失效，请重新登陆");
+                }
                 request.setAttribute("key", userId);
+
             }
 
             return true;

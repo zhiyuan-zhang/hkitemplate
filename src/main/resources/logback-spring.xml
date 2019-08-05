@@ -20,27 +20,55 @@
 			<appender-ref ref="CONSOLE" />
 		</root>
 	</springProfile>
-
 	<!-- 测试环境 -->
 	<springProfile name="test">
+
 		<!-- 每天产生一个文件 -->
-		<appender name="TEST-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<appender name="TEST-FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
 			<!-- 文件路径 -->
 			<file>${TEST_FILE_PATH}</file>
+
+			<layout class="ch.qos.logback.classic.PatternLayout">
+				<pattern>${PATTERN}</pattern>
+			</layout>
 			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 				<!-- 文件名称 -->
-				<fileNamePattern>${TEST_FILE_PATH}/info.%d{yyyy-MM-dd}.log</fileNamePattern>
+				<fileNamePattern>/logs/info.%d{yyyy-MM-dd}.log</fileNamePattern>
+				<!-- 文件最大保存历史数量 -->
+				<MaxHistory>100</MaxHistory>
+			</rollingPolicy>
+
+		</appender>
+
+
+		<appender name="TEST-FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<!-- 文件路径 -->
+			<file>/data/home/zhxt/zhxt-test/logs/error.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<!-- 文件名称 -->
+				<fileNamePattern>/data/home/zhxt/zhxt-test/logs/error.%d{yyyy-MM-dd}.log</fileNamePattern>
 				<!-- 文件最大保存历史数量 -->
 				<MaxHistory>100</MaxHistory>
 			</rollingPolicy>
 			<layout class="ch.qos.logback.classic.PatternLayout">
 				<pattern>${PATTERN}</pattern>
 			</layout>
+			<!-- 此日志文件只记录error级别的 -->
+			<filter class="ch.qos.logback.classic.filter.LevelFilter">
+				<level>ERROR</level>
+				<onMatch>ACCEPT</onMatch>
+				<onMismatch>DENY</onMismatch>
+			</filter>
+
 		</appender>
+
+
 		<root level="info">
-			<appender-ref ref="TEST-FILE" />
+			<appender-ref ref="TEST-FILE-INFO"/>
+			<appender-ref ref="TEST-FILE-ERROR"/>
 		</root>
 	</springProfile>
+
 
 	<!-- 生产环境 -->
 	<springProfile name="prod">

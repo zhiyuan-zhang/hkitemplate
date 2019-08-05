@@ -1,10 +1,16 @@
 package com.hkitemplate.demo.utils;
 
+import com.common.exceptions.CheckException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +28,54 @@ public final class RedisUtil {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     // =============================common============================
+
+
+    /**
+     *
+     * 功能描述: 生成指定业务编码
+     *
+     * @param bizCode 业务code
+     * @return:
+     * @auther: ZHANG.HAO
+     * @date: 2019-05-11 18:28
+     */
+    public StringBuilder generate(String bizCode) {
+        if(StringUtils.isEmpty(bizCode)){
+            throw new CheckException("流水号业务类型不能为空");
+        }
+
+        //获取当前时间
+        int year = LocalDateTime.now().getYear()-2000;
+        Month month = LocalDateTime.now().getMonth();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        int dayOfMonth = localDateTime.getDayOfMonth();
+
+        //设置过期时间为当前时间1天后
+        LocalDateTime localDateTime1 = LocalDateTime.now().plusDays(1);
+
+        ZoneId zone = ZoneId.systemDefault();
+        Instant instant = localDateTime1.atZone(zone).toInstant();
+
+        // key
+        //构造redis的key
+        bizCode += ""+year+month.getValue() + dayOfMonth;
+        //判断key是否存在
+        boolean b = this.hasKey(bizCode);
+        long incr;
+        if(b){
+            incr = this.incr(bizCode, 1);
+        }else{
+            incr = this.incr(bizCode,1);
+            //构造redis过期时间 localDateTime1
+            expire(bizCode,instant.toEpochMilli());
+        }
+        //默认编码需要2位，位数不够前面补0
+        String formattNum = String.format("%02d", incr);
+        StringBuilder sb = new StringBuilder(20);
+        //转换成业务需要的格式  bizCode + date + incr
+        StringBuilder append = sb.append(bizCode).append(formattNum);
+        return append;
+    }
 
     /**
      * 指定缓存失效时间

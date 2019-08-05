@@ -40,7 +40,11 @@ spring boot template
 
 17. 使用lombok slf4j打印日志
 
-18. 在AOP中添加slf4j的MDC便于日志的链路追踪
+18. 在AOP中添加slf4j的MDC便于日志的链路追踪并分级处理
+
+19. 添加接口防刷
+
+20. 添加特殊异常处理
 
 
 
