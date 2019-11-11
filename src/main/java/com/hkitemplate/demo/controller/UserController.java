@@ -14,6 +14,9 @@ import io.swagger.annotations.ApiParam;
 
 import com.hkitemplate.demo.mvc.user.IUserService;
 import com.hkitemplate.demo.mvc.user.User;
+import com.hkitemplate.demo.config.AccessLimit;
+
+
 /**
  *
  * @author zhanghao
@@ -47,6 +50,7 @@ public class UserController {
      * @author zhanghao
      * @since 2019-04-13
      */
+    @AccessLimit(time=5,max=1)
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
     public ResultBean<User> findUser(@PathVariable("id") int id) {
         return new ResultBean<User>(iUserService.getById(id));
@@ -79,6 +83,9 @@ public class UserController {
                                                 @PathVariable("id") int id) {
         return new ResultBean<Boolean>(iUserService.removeById(id));
     }
+
+
+
 
     /**
      *

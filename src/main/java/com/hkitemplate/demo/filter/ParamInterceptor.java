@@ -7,6 +7,7 @@ import com.hkitemplate.demo.config.AccessLimit;
 import com.hkitemplate.demo.utils.RedisUtil;
 import com.hkitemplate.demo.utils.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jetty.server.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -36,15 +37,21 @@ public class ParamInterceptor implements HandlerInterceptor {
             int max = 5;
             int time = 30;
             //组装key
-            StringBuffer requestURL = request.getRequestURL();
+            StringBuffer requestUrl = request.getRequestURL();
             String queryString = request.getQueryString();
+            String reqParam = ((Request) request).getHttpURI().getQuery();
+//            while(request.getParameterNames().hasMoreElements()){
+//                String paramName = (String)request.getParameterNames().nextElement();
+//                String[] paramValue = request.getParameterValues(paramName);
+//                log.error("getParameterNames : {}",paramValue);
+//
+//            }
+//            request.getInputStream()
+
             String remoteAddr = request.getRemoteAddr();
             String headerToken = request.getHeader("X-Token");
             String userId = vtoken(headerToken);
-            String key = requestURL + queryString + remoteAddr + userId;
-
-//            log.error("key {}",key.hashCode());
-
+            String key = requestUrl + queryString + remoteAddr + userId;
             HandlerMethod hm = (HandlerMethod) handler;
 
             AccessLimit methodAnnotation = hm.getMethodAnnotation(AccessLimit.class);
@@ -57,69 +64,51 @@ public class ParamInterceptor implements HandlerInterceptor {
                 verifyToken = methodAnnotation.verifyToken();
             }
 
+
             //验证redis
             if (redisUtil.hasKey(key)) {
                 double count = redisUtil.hincr("AccessLimit", key, 1);
-                if (count < max) {
+                if (count <= max) {
                     log.error("已经存在 key: {},count {}", key, count);
-//                    redisUtil.hincr("AccessLimit", key, 1);
 
                 } else {
-//                    redisUtil.hdel("AccessLimit",key);
                     log.error("count: {}", count);
                     throw new CheckException("请求频繁!");
                 }
-
-
             } else {
-
                 synchronized (this) {
                     if (redisUtil.hasKey(key)) {
                         double count = redisUtil.hincr("AccessLimit", key, 1);
-                        if (count < max) {
+                        if (count <= max) {
                             log.error("synchronized 已经存在 key: {},count {}", key, count);
-//                            redisUtil.hincr("AccessLimit", key, 1);
 
                         } else {
-//                            redisUtil.hdel("AccessLimit",key);
                             log.error("synchronized count: {}", count);
                             throw new CheckException("请求频繁!");
                         }
-
-
                     } else {
-                        log.error("第一次 key: {},time {}", key , time);
+                        log.error("第一次 key: {},time {}", key, time);
                         redisUtil.set(key, "AccessLimit", time);
-                        redisUtil.hdel("AccessLimit",key);
-//                        redisUtil.hincr("AccessLimit",key, 1);
-
+                        redisUtil.hdel("AccessLimit", key);
                     }
-
                 }
             }
-
             //验证token
             if (verifyToken) {
-//                log.error("url is : " + request.toString());
-
                 if (ObjectUtils.isEmpty(userId)) {
-                    throw new TokenErrorException();
+
+                    log.info("userId {}, remoteAddr {}, requestUrl {}, headerToken {}",userId,remoteAddr,requestUrl,headerToken);
                 }
-                String vtoken = (String)redisUtil.get(userId);
-                if(!headerToken.equals(vtoken)){
-                    throw new TokenErrorException("token失效，请重新登陆");
+                String vtoken = (String) redisUtil.get(userId);
+                if (ObjectUtils.isEmpty(vtoken)) {
+                }
+                if (!headerToken.equals(vtoken)) {
                 }
                 request.setAttribute("key", userId);
-
             }
-
             return true;
-
-
         }
         return true;
-
-
     }
 
     /**
