@@ -3,6 +3,7 @@ package com.hkitemplate.demo.utils;
 import com.common.exceptions.CheckException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -186,6 +187,17 @@ public final class RedisUtil {
             return false;
         }
     }
+
+    /**
+     * 设置某个key的超时时间
+     * @param key
+     * @param time
+     */
+    public void removeAtomicLong(String key, long time) {
+        RedisAtomicLong entityIdCounter = new RedisAtomicLong(key, redisTemplate.getConnectionFactory());
+        entityIdCounter.expire(time, TimeUnit.SECONDS);
+    }
+
 
     /**
      * 递增
